@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  password  String
+  role      Role
+  exercises Exercise[]
+}
+
+model Exercise {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  videoUrl    String
+  axisX       Int
+  axisY       Int
+  branchId    Int
+  branch      Branch  @relation(fields: [branchId], references: [id])
+  createdById Int
+  createdBy   User    @relation(fields: [createdById], references: [id])
+}
+
+model Branch {
+  id        Int     @id @default(autoincrement())
+  name      String
+  axisX     Int
+  axisY     Int
+  parentId  Int?
+  parent    Branch? @relation("BranchToBranch", fields: [parentId], references: [id])
+  children  Branch[] @relation("BranchToBranch")
+  exercises Exercise[]
+}
+
+enum Role {
+  admin
+  moderator
+  user
+}
