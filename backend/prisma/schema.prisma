@@ -8,11 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  password  String
-  role      Role
-  exercises Exercise[]
+  id          Int     @id @default(autoincrement())
+  email       String  @unique
+  username    String
+  password    String
+  role        String  @default("user")
+  verified    Boolean @default(false)
+  verifyToken String?
+  exercisesCreated Exercise[] @relation("UserExercisesCreated")
 }
 
 model Exercise {
@@ -25,8 +28,9 @@ model Exercise {
   branchId    Int
   branch      Branch  @relation(fields: [branchId], references: [id])
   createdById Int
-  createdBy   User    @relation(fields: [createdById], references: [id])
+  createdBy   User    @relation("UserExercisesCreated", fields: [createdById], references: [id])
 }
+
 
 model Branch {
   id        Int     @id @default(autoincrement())
