@@ -36,6 +36,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     console.log('Login-Route wurde aufgerufen ✅') // ← Muss erscheinen!
+    console.log('Login-Body:', req.body)
   try {
     const { email, password } = req.body
     const user = await prisma.user.findUnique({ where: { email } })
